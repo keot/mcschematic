@@ -1,0 +1,87 @@
+reset
+set encoding utf8
+
+# Perceptual Edge Medium Colours
+medium_k = "#737373"
+medium_r = "#ff3e5c"
+medium_g = "#5fcc60"
+medium_b = "#5298d8"
+medium_o = "#ffa44c"
+medium_p = "#a859af"
+medium_c = "#d86752"
+medium_m = "#e36fb6"
+
+# Perceptual Edge Highlight Colours
+highlight_k = "#010202"
+highlight_r = "#fe0022"
+highlight_g = "#009441"
+highlight_b = "#1b52ae"
+highlight_o = "#ff7300"
+highlight_p = "#710095"
+highlight_c = "#ad001a"
+highlight_m = "#c20097"
+
+# My Colours
+border_grey = "#c0c0c0"
+light_grey = "#404040"
+dark_grey = "#202020"
+black = "#000000"
+white = "#ffffff"
+grey = "#808080"
+
+set term png truecolor font "Helvetica,64" enhanced size 8192,8192
+set output "railway_network.png"
+
+set title "The EEE Plains: Railway Network"
+
+unset key
+set colorbox vertical
+
+set xtics out nomirror tc rgb black
+set ytics out nomirror tc rgb black
+set cbtics out nomirror tc rgb black
+set border back lc rgb border_grey
+
+set xtics 1024
+set ytics 1024
+set cbtics 8
+
+set xrange [-6144:4096] noreverse
+set yrange [-5120:5120] reverse
+
+set xlabel "Longitude (m) (x-axis)"
+
+set ylabel "Latitude (m) (z-axis)"
+
+set cblabel "Depth (m) (y-axis)" offset -2,0
+
+set xtics add ("West" -6144)
+set xtics add ("East" 4096)
+
+set ytics add ("North" -5120)
+set ytics add ("South" 5120)
+
+set cbtics add ("Bedrock" 4)
+set cbtics add ("Sea level" 63)
+set cbtics add ("" 64)
+
+set mxtics 64
+set mytics 64
+set mcbtics 8
+
+set palette rgbformulae 33,13,10
+
+# minor gridlines
+set size square
+set obj 1 rectangle from graph 0,0 to graph 1,1 behind fc rgb black
+set grid xtics ytics mxtics mytics back lt 1 lc rgb dark_grey
+
+# major gridlines
+set for [x=0:10] arrow from graph x*0.1,0 to graph x*0.1,1 nohead back lt 1 lc rgb light_grey
+set for [y=0:10] arrow from graph 0,y*0.1 to graph 1,y*0.1 nohead back lt 1 lc rgb light_grey
+
+# origin
+set arrow from graph 0,0.5 to graph 1,0.5 nohead back lt 1 lc rgb grey
+set arrow from graph 0.6,0 to graph 0.6,1 nohead back lt 1 lc rgb grey
+
+plot "railway_network.dat" using ($1 + $3):($2 + $4):5 with points ps 1 pt 0 lc pal z
